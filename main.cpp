@@ -51,6 +51,13 @@ class segmentDisplay
 
     public:
 
+        // function to turn off all of the segments of the display
+        void displayClear()
+        {
+            // set all of the segments pins to 0
+            segA = segB = segC = segD = segF = segG = 0;
+        }
+
         // function to display a single letter on the display
         void displayChar(char charToDisplay)
         {
@@ -67,6 +74,19 @@ class segmentDisplay
             segG = (letters[charRow][6]);
         }
 
+        // function to display a string letter by letter on the display
+        void displayString(const std::string stringToDisplay)
+        {
+            // iterate over each char in the string
+            for (char c : stringToDisplay)
+            {
+                displayChar(c);         // display the char
+                thread_sleep_for(700);  // wait for 700ms
+                displayClear();         // clear the display
+            }
+        }
+
+
 };
 
 
@@ -76,8 +96,8 @@ int main()
 
     //  Initialise an object sg of class SegmentDisplay
     segmentDisplay sg;
-    // atempt to display a letter on the display
-    sg.displayChar('f');
+    // atempt to display a string on the display
+    sg.displayString("Finley");
 
     // when the program has completed, do nothing forever
     while (true) {
