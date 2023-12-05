@@ -139,7 +139,7 @@ void displayRowlesThreadFn()
 // main() runs in its own thread in the OS
 int main()
 {   
-    //
+    //start the threads that run the display functions
     displayRowlesThread.start(displayFinleyThreadFn);
     displayFinleyThread.start(displayRowlesThreadFn);
     
