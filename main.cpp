@@ -1,22 +1,30 @@
 #include "mbed.h"
 #include <string>
 
+//constructors for the semaphores
+Semaphore displayFinleySemaphore(0, 1);
+Semaphore displayRowlesSemaphore(0, 1);
+
+//thread for displaying Finley signal detection
+Thread displayFinleyThread;
+//thread for displaying Rowles signal detection
+Thread displayRowlesThread;
+
 // Initialise Pins D9 & D8 as Didital inputs for the two push buttons
-DigitalIn pb1(D9);
-DigitalIn pb2(D8);
+InterruptIn pb1(D9, PullUp);
+InterruptIn pb2(D8, PullUp);
 
 //  Initialise Pins D1 to D7 as Digital outputs for the segments of the Displaly, not including the DP
-DigitalOut segA(D1);
-DigitalOut segB(D0);
-DigitalOut segC(D4);
-DigitalOut segD(D5);
-DigitalOut segE(D6);
-DigitalOut segF(D2);
-DigitalOut segG(D3);
+DigitalOut segA(D4);
+DigitalOut segB(D5);
+DigitalOut segC(D6);
+DigitalOut segD(D1);
+DigitalOut segE(D0);
+DigitalOut segF(D3);
+DigitalOut segG(D2);
 
 class segmentDisplay
 {
-
     // Private array storing the state of each segement requierd to display each letter of the alphabet
     // column 0-7 as segments a-g
     int letters[26][7] = 
@@ -61,6 +69,7 @@ class segmentDisplay
         // function to display a single letter on the display
         void displayChar(char charToDisplay)
         {
+    
             //Convets the character to display into its zero indexed position in the alphabet
             int charRow = (int)(charToDisplay % 32) - 1;
 
@@ -86,21 +95,61 @@ class segmentDisplay
             }
         }
 
-
 };
 
+//  Initialise an object sg of class SegmentDisplay
+segmentDisplay sg;
+
+// function is called when the pb1 button is pressed
+void displayFinleyCallback()
+{
+    // allows the displayFinleyThread to run
+    displayFinleySemaphore.release();
+}
+
+// function is called when the pb2 button is pressed
+void displayRowlesCallback()
+{
+    // allows the displayRowlesThread to run
+    displayRowlesSemaphore.release();
+}
+
+//function executed by the displayFinleyThread
+void displayFinleyThreadFn()
+{
+    while(1)
+    {
+        //waits for the Semaphore to be acquired, then calls the displayString function 
+        displayFinleySemaphore.acquire();
+        sg.displayString("Finley");
+    }
+}
+
+//function executed by the displayRowlesThread
+void displayRowlesThreadFn()
+{
+    while(1)
+    {
+        //waits for the Semaphore to be acquired, then calls the displayString function 
+        displayRowlesSemaphore.acquire();
+        sg.displayString("Rowles");
+    }
+}
 
 // main() runs in its own thread in the OS
 int main()
 {   
-
-    //  Initialise an object sg of class SegmentDisplay
-    segmentDisplay sg;
-    // atempt to display a string on the display
-    sg.displayString("Finley");
+    //
+    displayRowlesThread.start(displayFinleyThreadFn);
+    displayFinleyThread.start(displayRowlesThreadFn);
+    
+    //call the appropriate fupressed when the buttons are pressed
+    pb1.rise(displayFinleyCallback);
+    pb2.rise(displayRowlesCallback);
 
     // when the program has completed, do nothing forever
-    while (true) {
+    while (true)
+    {
         sleep();
     }
 }
