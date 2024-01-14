@@ -4,6 +4,8 @@
 //constructors for the semaphores
 Semaphore displayFinleySemaphore(0, 1);
 Semaphore displayRowlesSemaphore(0, 1);
+//constructors for the mutex
+Mutex displayLock;
 
 //thread for displaying Finley signal detection
 Thread displayFinleyThread;
@@ -69,7 +71,6 @@ class segmentDisplay
         // function to display a single letter on the display
         void displayChar(char charToDisplay)
         {
-    
             //Convets the character to display into its zero indexed position in the alphabet
             int charRow = (int)(charToDisplay % 32) - 1;
 
@@ -86,6 +87,8 @@ class segmentDisplay
         // function to display a string letter by letter on the display
         void displayString(const std::string stringToDisplay)
         {
+            displayLock.lock();
+            
             // iterate over each char in the string
             for (char c : stringToDisplay)
             {
@@ -93,6 +96,8 @@ class segmentDisplay
                 thread_sleep_for(700);  // wait for 700ms
                 displayClear();         // clear the display
             }
+            
+            displayLock.unlock();
         }
 
 };
