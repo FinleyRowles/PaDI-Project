@@ -1,4 +1,4 @@
-# STM32 Seven Segment Display Name Project
+# STM32 Programming and Digital Interfacing project (First Year)
 
 ## Overview
 This project is a **Programming and Digital Interfacing** assignment that uses an **STM32 microcontroller** to display a name on a **seven-segment display**, one character at a time. The system includes two push buttons:
