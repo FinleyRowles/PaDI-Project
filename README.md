@@ -23,8 +23,6 @@ This project is a **Programming and Digital Interfacing** assignment that uses a
 | D8          | Push Button 2 (PB2)  |
 | D1 - D7     | Seven-Segment Display Segments (A-G) |
 
-## Setup & Usage
-1. Flash the **main.cpp** file to your STM32 board.
-2. Connect the **seven-segment display** and **push buttons** as per the wiring table.
-3. Press **PB1** to display "Finley".
-4. Press **PB2** to display "Rowles".
+## Breadboard
+![VideoCapture_20250303-202332](https://github.com/user-attachments/assets/243c3a26-7811-4ef9-b3df-bb0abea00ea3)
+
